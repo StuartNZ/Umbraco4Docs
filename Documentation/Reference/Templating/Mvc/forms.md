@@ -120,7 +120,7 @@ This lists the different overloads available for BeginUmbracoForm:
 
 ##Understanding the Routing Process
 
-There's been numerous cases of people attempting to return a PartialView directly from their [HttpPost] action due to not fully understanding the routing process of POSTing data to the server. This will explain the sequence of events. For this example we'll assume that the page that is rendering is at the address: http://mysite.com/feedback
+There's been numerous cases of people attempting to return a PartialView directly from their SurfaceController action due to not fully understanding the routing process of posting data to the server. This will explain the sequence of events. For this example we'll assume that the page that is rendering is at the address: http://mysite.com/feedback
 
 ### 1. Umbraco page requested
 
