@@ -84,25 +84,39 @@ This lists the different overloads available for BeginUmbracoForm:
 	//as seen in the above example
 	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName)
 	
-	//The next three are the same as above but allow you to specify additional route values and/or html attributes for the form tag	
+	//The following overrides are the same as above but allow you to specify additional route values and/or html attributes for the form tag and a form method
+	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, FormMethod method)	
 	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, object additionalRouteVals)
+	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, object additionalRouteVals, FormMethod method)
 	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, object additionalRouteVals, object htmlAttributes)	
-	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, object additionalRouteVals, IDictionary<string, object> htmlAttributes)
+	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, object additionalRouteVals, object htmlAttributes, FormMethod method)	
+	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, object additionalRouteVals, IDictionary<string, object> htmlAttributes)	
+	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, object additionalRouteVals, IDictionary<string, object> htmlAttributes, FormMethod method)
 	
 	//Allows you to specify the action name and controller type either by a generic type or type object:
 	BeginUmbracoForm(this HtmlHelper html, string action, Type surfaceType)
+	BeginUmbracoForm(this HtmlHelper html, string action, Type surfaceType, FormMethod method)
 	BeginUmbracoForm<T>(this HtmlHelper html, string action)
+	BeginUmbracoForm<T>(this HtmlHelper html, string action, FormMethod method)
 	BeginUmbracoForm(this HtmlHelper html, string action, Type surfaceType, object additionalRouteVals)
+	BeginUmbracoForm(this HtmlHelper html, string action, Type surfaceType, object additionalRouteVals, FormMethod method)
 	BeginUmbracoForm<T>(this HtmlHelper html, string action, object additionalRouteVals)
+	BeginUmbracoForm<T>(this HtmlHelper html, string action, object additionalRouteVals, FormMethod method)
 	BeginUmbracoForm(this HtmlHelper html, string action, Type surfaceType, object additionalRouteVals, object htmlAttributes)
+	BeginUmbracoForm(this HtmlHelper html, string action, Type surfaceType, object additionalRouteVals, object htmlAttributes, FormMethod method)
 	BeginUmbracoForm<T>(this HtmlHelper html, string action, object additionalRouteVals, object htmlAttributes)
+	BeginUmbracoForm<T>(this HtmlHelper html, string action, object additionalRouteVals, object htmlAttributes, FormMethod method)
 	BeginUmbracoForm(this HtmlHelper html, string action, Type surfaceType, object additionalRouteVals, IDictionary<string, object> htmlAttributes)
+	BeginUmbracoForm(this HtmlHelper html, string action, Type surfaceType, object additionalRouteVals, IDictionary<string, object> htmlAttributes, FormMethod method)
 	BeginUmbracoForm<T>(this HtmlHelper html, string action, object additionalRouteVals, IDictionary<string, object> htmlAttributes)
+	BeginUmbracoForm<T>(this HtmlHelper html, string action, object additionalRouteVals, IDictionary<string, object> htmlAttributes, FormMethod method)
 	
 	//The following are only used for plugin based surface controllers. If you don't want to specify
 	//the controller type, you can specify the area that the plugin SurfaceController is routed to
 	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, string area)
+	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, string area, FormMethod method)
 	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, string area, object additionalRouteVals, IDictionary<string, object> htmlAttributes)
+	BeginUmbracoForm(this HtmlHelper html, string action, string controllerName, string area, object additionalRouteVals, IDictionary<string, object> htmlAttributes, FormMethod method)
 
 ##Understanding the Routing Process
 
@@ -120,12 +134,12 @@ There's been numerous cases of people attempting to return a PartialView directl
 ### 3. User submits the form
 
 1. The user fills out the form and submits it
-2. An http POST is made (you'll notice to the same URL that is currently rendering: http://mysite.com/feedback)
+2. Depending on the FormMethod used, a http POST or GET is made (you'll notice to the same URL that is currently rendering: http://mysite.com/feedback)
 3. Umbraco finds the content page
-4. Umbraco detects that a POST has been made
-5. Umbraco decrypts a special hidden value injected into the POST by the BeginUmbracoForm
-6. Using this decrypted data it routes the request directly to the SurfaceController's [HttpPost] action
-7. The [HttpPost] action executes returning "CurrentUmbracoPage()" if the data is invalid or "RedirectToCurrentUmbracoPage()" if the data is valid...
+4. Umbraco detects that a postback has been made
+5. Umbraco decrypts a special hidden value injected into the form/querystring by the BeginUmbracoForm
+6. Using this decrypted data it routes the request directly to the SurfaceController's action
+7. The SurfaceController action executes returning "CurrentUmbracoPage()" if the data is invalid or "RedirectToCurrentUmbracoPage()" if the data is valid...
 
 	#### 3.1 RedirectToCurrentUmbracoPage()
 	
@@ -137,4 +151,4 @@ There's been numerous cases of people attempting to return a PartialView directl
 	2. The call to `return CurrentUmbracoPage()` sends the request back through the Umbraco pipeline and maintains the current ModelState and ViewData
 	3. The process starts again at **2. Umbraco page rendered**
 
-So you can see that if you returned a Partial View from within your [HttpPost] action, the only thing that would happen is that you'd end up displaying only the markup for the partial view to the end-user because you are not sending the request back to Umraco.
+So you can see that if you returned a Partial View from within your SurfaceController action, the only thing that would happen is that you'd end up displaying only the markup for the partial view to the end-user because you are not sending the request back to Umraco.
